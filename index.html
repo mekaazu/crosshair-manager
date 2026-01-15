@@ -3,6 +3,24 @@
 <head>
 <title>Roblox Crosshair Manager</title>
 <style>
+.toast {
+    background:#1f2937;
+    border-left:6px solid #22c55e;
+    color:white;
+    padding:12px 16px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:10px;
+    animation: slideIn .25s ease;
+}
+
+@keyframes slideIn {
+    from { transform:translateX(40px); opacity:0; }
+    to   { transform:translateX(0); opacity:1; }
+}
+
 body {
     background:#0b0b0b;
     color:white;
@@ -12,18 +30,25 @@ body {
 
 h1 { margin-bottom:20px; }
 
+#toastBox {
+    position:fixed;
+    top:20px;
+    right:20px;
+    z-index:999;
+}
+
 #grid {
     display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));
-    gap:20px;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:28px;
 }
 
 .card {
     background:#141414;
-    border-radius:14px;
-    padding:18px;
+    border-radius:18px;
+    padding:28px;
     text-align:center;
-    box-shadow:0 0 12px rgba(0,0,0,.6);
+    box-shadow:0 0 18px rgba(0,0,0,.7);
 }
 
 .card img {
@@ -54,6 +79,7 @@ h1 { margin-bottom:20px; }
 
 <h1>Roblox Crosshair Manager</h1>
 
+<div id="toastBox"></div>
 <div id="grid"></div>
 
 <script>
@@ -75,13 +101,27 @@ crosshairs.forEach(c => {
 
   card.querySelector("button").onclick = () => {
       navigator.clipboard.writeText(c.id);
-      alert("Copied: " + c.id);
+      showToast("Copied crosshair ID!");
   };
 
   grid.appendChild(card);
 });
+
+function showToast(message) {
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.innerHTML = `
+        <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" width="20">
+            <path d="M13 16h-1v-4h1m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
+        </svg>
+        <span>${message}</span>
+    `;
+
+    document.getElementById("toastBox").appendChild(toast);
+    setTimeout(() => toast.remove(), 2500);
+}
 </script>
 
 </body>
 </html>
-
