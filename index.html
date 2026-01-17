@@ -14,6 +14,7 @@ body {
     padding:20px;
 }
 
+/* TITLE */
 h1 {
     margin-bottom:6px;
     text-align:center;
@@ -21,12 +22,34 @@ h1 {
 
 .credit {
     text-align:center;
-    margin-bottom:28px;
+    margin-bottom:20px;
     font-size:14px;
     color:#9ca3af;
-    letter-spacing:.5px;
 }
 
+/* TABS */
+.tabs {
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.tab {
+    background:#1f2937;
+    color:white;
+    border:none;
+    padding:8px 16px;
+    border-radius:10px;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.tab.active {
+    background:#2563eb;
+}
+
+/* GRID */
 #grid {
     display:grid;
     grid-template-columns:repeat(auto-fill, 200px);
@@ -34,6 +57,7 @@ h1 {
     justify-content:center;
 }
 
+/* CARD */
 .card {
     position:relative;
     width:200px;
@@ -45,25 +69,24 @@ h1 {
     justify-content:center;
     overflow:hidden;
     box-shadow:0 0 0 2px #ffffff30;
-    transition:transform .3s ease, box-shadow .3s ease;
+    transition:.3s;
+    cursor:pointer;
 }
 
 .card:hover {
     transform:scale(1.05);
-    box-shadow:0 10px 25px rgba(255,255,255,.15);
 }
 
 .card img {
     width:120px;
     height:120px;
     image-rendering:pixelated;
-    transition:transform .5s ease, opacity .5s ease;
+    transition:.4s;
 }
 
 .card__content {
     position:absolute;
     inset:0;
-    padding:16px;
     background:#f2f2f2;
     color:#111;
     display:flex;
@@ -72,23 +95,11 @@ h1 {
     text-align:center;
     transform:rotateX(-90deg);
     transform-origin:bottom;
-    transition:transform .5s ease;
+    transition:.4s;
 }
 
 .card:hover .card__content {
-    transform:rotateX(0deg);
-}
-
-.card__title {
-    margin:0;
-    font-size:18px;
-    font-weight:700;
-}
-
-.card__description {
-    margin:6px 0 14px;
-    font-size:13px;
-    color:#555;
+    transform:rotateX(0);
 }
 
 .copyBtn {
@@ -98,27 +109,70 @@ h1 {
     padding:8px 12px;
     border-radius:8px;
     cursor:pointer;
-    font-size:14px;
 }
 
+/* PREVIEW */
+#previewBox {
+    width:900px;
+    height:500px;
+    margin:0 auto;
+    border-radius:16px;
+    background:#111;
+    background-size:cover;
+    background-position:center;
+    position:relative;
+    overflow:hidden;
+}
+
+.preview-note {
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#888;
+    pointer-events:none;
+}
+
+/* BACKGROUND SELECTOR */
+.bg-grid {
+    display:flex;
+    justify-content:center;
+    gap:12px;
+    margin-bottom:16px;
+}
+
+.bg-thumb {
+    width:120px;
+    height:70px;
+    border-radius:8px;
+    background-size:cover;
+    background-position:center;
+    cursor:pointer;
+    border:2px solid transparent;
+}
+
+.bg-thumb:hover {
+    border-color:#2563eb;
+}
+
+/* TOAST */
 #toastBox {
     position:fixed;
     bottom:24px;
     left:50%;
     transform:translateX(-50%);
-    z-index:9999;
 }
 
 .toast {
     background:#1f2937;
     border-left:6px solid #22c55e;
-    color:white;
     padding:12px 16px;
     border-radius:10px;
     margin-top:10px;
     opacity:0;
     transform:translateY(20px);
-    animation:toastIn .3s ease forwards;
+    animation:toastIn .3s forwards;
 }
 
 @keyframes toastIn {
@@ -138,14 +192,39 @@ h1 {
 <h1>Roblox Crosshair Manager</h1>
 <div class="credit">— made by mekazu</div>
 
-<div id="grid"></div>
+<div class="tabs">
+    <button class="tab active" data-tab="library">Library</button>
+    <button class="tab" data-tab="preview">Preview</button>
+</div>
+
+<!-- LIBRARY -->
+<div id="library" class="tabPage">
+    <div id="grid"></div>
+</div>
+
+<!-- PREVIEW -->
+<div id="preview" class="tabPage" style="display:none;">
+    <div class="bg-grid">
+        <div class="bg-thumb" style="background-image:url('backgrounds/wh1.PNG')" data-bg="wh1.PNG"></div>
+        <div class="bg-thumb" style="background-image:url('backgrounds/wh2.PNG')" data-bg="wh2.PNG"></div>
+        <div class="bg-thumb" style="background-image:url('backgrounds/wh3.PNG')" data-bg="wh3.PNG"></div>
+        <div class="bg-thumb" style="background-image:url('backgrounds/gt1.PNG')" data-bg="gt1.PNG"></div>
+        <div class="bg-thumb" style="background-image:url('backgrounds/gt2.PNG')" data-bg="gt2.PNG"></div>
+        <div class="bg-thumb" style="background-image:url('backgrounds/ord1.PNG')" data-bg="ord1.PNG"></div>
+        <div class="bg-thumb" style="background-image:url('backgrounds/ord2.PNG')" data-bg="ord2.PNG"></div>
+    </div>
+
+    <div id="previewBox">
+        <div class="preview-note">Move your mouse here</div>
+    </div>
+</div>
+
 <div id="toastBox"></div>
 
 <script>
 const crosshairs = [
     { id:"7808856331", name:"Small White (0.75x)" },
     { id:"973818318", name:"Classic SMG White" },
-
     { id:"7808857452", name:"Small Green" },
     { id:"5345033072", name:"Green Dot (1.5x)" },
     { id:"974334349", name:"Green Dot" },
@@ -153,53 +232,69 @@ const crosshairs = [
     { id:"5355743699", name:"Green Dot Hollow" },
     { id:"4813359774", name:"Green Hollow Box [ST]" },
     { id:"2897930456", name:"Lime Green Dot" },
-    { id:"973823951", name:"Green ST Cursor" },
-
     { id:"1175800511", name:"Cyan Dot" },
     { id:"4845399440", name:"Dark Blue Dot" },
-
     { id:"3045906966", name:"Purple Pixel" },
-    { id:"973821519", name:"SpetnazCaptain" },
-
     { id:"2833910141", name:"Pink Dot" },
-
     { id:"4867961490", name:"Gold Dot" },
-    { id:"4996338151", name:"Outlined Orange Dot" },
     { id:"4813642997", name:"Yellow Dot" },
-
     { id:"7808856842", name:"Small Red" },
     { id:"2666442734", name:"Red Glowing Dot" },
-    { id:"973823018", name:"Red ST Cursor" },
-
-    { id:"5317446797", name:"Recon Dot (1.5x)" },
-    { id:"970416008", name:"RCL Default Armageddon" },
-    { id:"12230015092", name:"Yellow Dot" },
-    { id:"6656897946", name:"Anime" }
+    { id:"973823018", name:"Red ST Cursor" }
 ];
 
 const grid = document.getElementById("grid");
+const previewBox = document.getElementById("previewBox");
 
+/* RENDER LIBRARY */
 crosshairs.forEach(c => {
     const card = document.createElement("div");
     card.className = "card";
 
     card.innerHTML = `
-        <img src="images/${c.id}.png" alt="">
+        <img src="images/${c.id}.png">
         <div class="card__content">
-            <h3 class="card__title">${c.name}</h3>
-            <p class="card__description">Roblox ID</p>
+            <h3>${c.name}</h3>
+            <p>Roblox ID</p>
             <button class="copyBtn">📋 Copy ID</button>
         </div>
     `;
 
-    card.querySelector(".copyBtn").onclick = () => {
+    card.querySelector(".copyBtn").onclick = e => {
+        e.stopPropagation();
         navigator.clipboard.writeText(c.id);
         showToast("Copied ID!");
+    };
+
+    // 🔥 SET PREVIEW CURSOR
+    card.onclick = () => {
+        previewBox.style.cursor = `url(images/${c.id}.png) 16 16, crosshair`;
+        showToast("Preview cursor set");
     };
 
     grid.appendChild(card);
 });
 
+/* BACKGROUND SWITCH */
+document.querySelectorAll(".bg-thumb").forEach(bg => {
+    bg.onclick = () => {
+        previewBox.style.backgroundImage =
+            `url('backgrounds/${bg.dataset.bg}')`;
+    };
+});
+
+/* TABS */
+document.querySelectorAll(".tab").forEach(tab => {
+    tab.onclick = () => {
+        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+
+        document.querySelectorAll(".tabPage").forEach(p => p.style.display = "none");
+        document.getElementById(tab.dataset.tab).style.display = "block";
+    };
+});
+
+/* TOAST */
 function showToast(msg) {
     const toast = document.createElement("div");
     toast.className = "toast";
