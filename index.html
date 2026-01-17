@@ -14,36 +14,19 @@ body {
     padding:20px;
 }
 
-/* TITLE */
 h1 {
     margin-bottom:6px;
     text-align:center;
 }
 
-/* CREDIT */
 .credit {
     text-align:center;
-    margin-bottom:20px;
+    margin-bottom:28px;
     font-size:14px;
     color:#9ca3af;
     letter-spacing:.5px;
 }
 
-/* SEARCH */
-#search {
-    display:block;
-    margin:0 auto 24px;
-    padding:10px 14px;
-    width:260px;
-    border-radius:10px;
-    border:none;
-    outline:none;
-    font-size:14px;
-    background:#1f2937;
-    color:white;
-}
-
-/* GRID */
 #grid {
     display:grid;
     grid-template-columns:repeat(auto-fill, 200px);
@@ -51,7 +34,6 @@ h1 {
     justify-content:center;
 }
 
-/* CARD */
 .card {
     position:relative;
     width:200px;
@@ -71,7 +53,6 @@ h1 {
     box-shadow:0 10px 25px rgba(255,255,255,.15);
 }
 
-/* IMAGE */
 .card img {
     width:120px;
     height:120px;
@@ -79,12 +60,6 @@ h1 {
     transition:transform .5s ease, opacity .5s ease;
 }
 
-.card:hover img {
-    transform:scale(0);
-    opacity:0;
-}
-
-/* FLIP CONTENT */
 .card__content {
     position:absolute;
     inset:0;
@@ -126,7 +101,6 @@ h1 {
     font-size:14px;
 }
 
-/* TOAST */
 #toastBox {
     position:fixed;
     bottom:24px;
@@ -141,9 +115,6 @@ h1 {
     color:white;
     padding:12px 16px;
     border-radius:10px;
-    display:flex;
-    align-items:center;
-    gap:10px;
     margin-top:10px;
     opacity:0;
     transform:translateY(20px);
@@ -157,7 +128,7 @@ h1 {
 .toast.hide {
     opacity:0;
     transform:translateY(20px);
-    transition:opacity .4s ease, transform .4s ease;
+    transition:.4s;
 }
 </style>
 </head>
@@ -167,111 +138,77 @@ h1 {
 <h1>Roblox Crosshair Manager</h1>
 <div class="credit">— made by mekazu</div>
 
-<input id="search" placeholder="Search crosshairs..." />
-
 <div id="grid"></div>
 <div id="toastBox"></div>
 
 <script>
 const crosshairs = [
-  { id:"7808856342", name:"Small White (0.75x)" },
-  { id:"5317446884", name:"Recon Dot (1.5x)" },
-  { id:"973818323", name:"Classic SMG White" },
-  { id:"7808857476", name:"Small Green" },
-  { id:"7808856849", name:"Small Red" },
-  { id:"6513760540", name:"Pink Dot" },
-  { id:"3045906973", name:"Purple Pixel" },
-  { id:"973821524", name:"Purple Double Circle" },
-  { id:"7962972891", name:"Large Green" },
-  { id:"5345033107", name:"Green Dot (1.5x)" },
-  { id:"5119932959", name:"Orange Dot" },
-  { id:"4882930044", name:"Green Cross" },
-  { id:"6162356229", name:"Blue Cross" },
-  { id:"5355743715", name:"Green Dot Hollow" },
-  { id:"4813359779", name:"Green Hollow Box [ST]" },
-  { id:"2897930467", name:"Lime Green Dot" },
-  { id:"5615369495", name:"Green SMG" },
-  { id:"7962980217", name:"Green Dot Gray Circle" },
-  { id:"5355158165", name:"Blue Diagonal Cross" },
-  { id:"5338736683", name:"Green Dot with Cross" },
-  { id:"4996338163", name:"Outlined Orange Dot" },
-  { id:"4977719314", name:"Teal Plus" },
-  { id:"4671612521", name:"Katiba" },
-  { id:"1177161234", name:"Cyan Diagonal Cross" },
-  { id:"1314267823", name:"Recon Dot" },
-  { id:"974334349", name:"Green Dot" },
-  { id:"6929587871", name:"Snow Core Small White Dot" },
-  { id:"1175800511", name:"Cyan Dot" },
-  { id:"4845399440", name:"Dark Blue Dot" },
-  { id:"2833910141", name:"Pink Dot" },
-  { id:"4867961490", name:"Gold Dot" },
-  { id:"4813642997", name:"Yellow Dot" },
-  { id:"4915772229", name:"Teal Dot" },
-  { id:"2666442734", name:"Red Glowing Dot" },
-  { id:"1068136986", name:"Small SMG" },
-  { id:"1177379923", name:"Red Dot w/ Red Circle" },
-  { id:"970416008", name:"RCL Default Armageddon" },
-  { id:"1178545824", name:"Red Dot w/ Diagonal Cross" },
-  { id:"973823018", name:"Red ST Cursor" },
-  { id:"973823951", name:"Green ST Cursor" },
-  { id:"1001678748", name:"Pink Diamond" },
-  { id:"4901195653", name:"Green Dot w/ Green Circle" },
-  { id:"974339313", name:"Brown ST w/ Blue Outline" },
-  { id:"304591126", name:"Red Dot w/ White Outline" },
-  { id:"6656897953", name:"Anime Girl" },
-  { id:"6342049525", name:"Shaltear" },
-  { id:"6342042394", name:"Aqua" },
-  { id:"6321798512", name:"Megumin" },
-  { id:"5154355692", name:"Astolfo" }
+    { id:"7808856331", name:"Small White (0.75x)" },
+    { id:"973818318", name:"Classic SMG White" },
+
+    { id:"7808857452", name:"Small Green" },
+    { id:"5345033072", name:"Green Dot (1.5x)" },
+    { id:"974334349", name:"Green Dot" },
+    { id:"4882930015", name:"Green Cross" },
+    { id:"5355743699", name:"Green Dot Hollow" },
+    { id:"4813359774", name:"Green Hollow Box [ST]" },
+    { id:"2897930456", name:"Lime Green Dot" },
+    { id:"973823951", name:"Green ST Cursor" },
+
+    { id:"1175800511", name:"Cyan Dot" },
+    { id:"4845399440", name:"Dark Blue Dot" },
+
+    { id:"3045906966", name:"Purple Pixel" },
+    { id:"973821519", name:"SpetnazCaptain" },
+
+    { id:"2833910141", name:"Pink Dot" },
+
+    { id:"4867961490", name:"Gold Dot" },
+    { id:"4996338151", name:"Outlined Orange Dot" },
+    { id:"4813642997", name:"Yellow Dot" },
+
+    { id:"7808856842", name:"Small Red" },
+    { id:"2666442734", name:"Red Glowing Dot" },
+    { id:"973823018", name:"Red ST Cursor" },
+
+    { id:"5317446797", name:"Recon Dot (1.5x)" },
+    { id:"970416008", name:"RCL Default Armageddon" },
+    { id:"12230015092", name:"Yellow Dot" },
+    { id:"6656897946", name:"Anime" }
 ];
 
 const grid = document.getElementById("grid");
-const search = document.getElementById("search");
 
-function render() {
-  grid.innerHTML = "";
-  crosshairs.forEach(c => {
+crosshairs.forEach(c => {
     const card = document.createElement("div");
     card.className = "card";
-    card.dataset.search = (c.name + c.id).toLowerCase();
 
     card.innerHTML = `
-      <img src="images/${c.id}.png">
-      <div class="card__content">
-        <h3 class="card__title">${c.name}</h3>
-        <p class="card__description">Roblox Asset ID</p>
-        <button class="copyBtn">📋 Copy ID</button>
-      </div>
+        <img src="images/${c.id}.png" alt="">
+        <div class="card__content">
+            <h3 class="card__title">${c.name}</h3>
+            <p class="card__description">Roblox ID</p>
+            <button class="copyBtn">📋 Copy ID</button>
+        </div>
     `;
 
     card.querySelector(".copyBtn").onclick = () => {
-      navigator.clipboard.writeText(
-        `ImageLabel.Image = "rbxassetid://${c.id}"`
-      );
-      showToast("Copied Lua code!");
+        navigator.clipboard.writeText(c.id);
+        showToast("Copied ID!");
     };
 
     grid.appendChild(card);
-  });
-}
-
-search.addEventListener("input", e => {
-  const q = e.target.value.toLowerCase();
-  document.querySelectorAll(".card").forEach(card => {
-    card.style.display = card.dataset.search.includes(q) ? "flex" : "none";
-  });
 });
 
 function showToast(msg) {
-  const toast = document.createElement("div");
-  toast.className = "toast";
-  toast.textContent = msg;
-  document.getElementById("toastBox").appendChild(toast);
-  setTimeout(() => toast.classList.add("hide"), 2000);
-  setTimeout(() => toast.remove(), 2600);
-}
+    const toast = document.createElement("div");
+    toast.className = "toast";
+    toast.textContent = msg;
+    document.getElementById("toastBox").appendChild(toast);
 
-render();
+    setTimeout(() => toast.classList.add("hide"), 2000);
+    setTimeout(() => toast.remove(), 2600);
+}
 </script>
 
 </body>
