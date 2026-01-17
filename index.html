@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Roblox Crosshair Manager</title>
+<title>Roblox Crosshair Library</title>
 
 <style>
 * { box-sizing:border-box; }
@@ -20,11 +20,21 @@ h1 {
     text-align:center;
 }
 
+/* CREDIT */
 .credit {
     text-align:center;
     margin-bottom:20px;
     font-size:14px;
     color:#9ca3af;
+}
+.credit a {
+    color:#9ca3af;
+    text-decoration:none;
+    font-weight:600;
+}
+.credit a:hover {
+    color:white;
+    text-decoration:underline;
 }
 
 /* TABS */
@@ -34,7 +44,6 @@ h1 {
     gap:10px;
     margin-bottom:20px;
 }
-
 .tab {
     background:#1f2937;
     color:white;
@@ -42,9 +51,7 @@ h1 {
     padding:8px 16px;
     border-radius:10px;
     cursor:pointer;
-    font-size:14px;
 }
-
 .tab.active {
     background:#2563eb;
 }
@@ -72,18 +79,14 @@ h1 {
     transition:.3s;
     cursor:pointer;
 }
-
 .card:hover {
     transform:scale(1.05);
 }
-
 .card img {
     width:120px;
     height:120px;
     image-rendering:pixelated;
-    transition:.4s;
 }
-
 .card__content {
     position:absolute;
     inset:0;
@@ -97,11 +100,9 @@ h1 {
     transform-origin:bottom;
     transition:.4s;
 }
-
 .card:hover .card__content {
     transform:rotateX(0);
 }
-
 .copyBtn {
     background:#2563eb;
     border:none;
@@ -112,6 +113,18 @@ h1 {
 }
 
 /* PREVIEW */
+.preview-controls {
+    text-align:center;
+    margin-bottom:12px;
+}
+#fullscreenBtn {
+    background:#2563eb;
+    border:none;
+    color:white;
+    padding:8px 14px;
+    border-radius:10px;
+    cursor:pointer;
+}
 #previewBox {
     width:900px;
     height:500px;
@@ -123,7 +136,6 @@ h1 {
     position:relative;
     overflow:hidden;
 }
-
 .preview-note {
     position:absolute;
     inset:0;
@@ -134,14 +146,13 @@ h1 {
     pointer-events:none;
 }
 
-/* BACKGROUND SELECTOR */
+/* BACKGROUNDS */
 .bg-grid {
     display:flex;
     justify-content:center;
     gap:12px;
     margin-bottom:16px;
 }
-
 .bg-thumb {
     width:120px;
     height:70px;
@@ -151,7 +162,6 @@ h1 {
     cursor:pointer;
     border:2px solid transparent;
 }
-
 .bg-thumb:hover {
     border-color:#2563eb;
 }
@@ -163,7 +173,6 @@ h1 {
     left:50%;
     transform:translateX(-50%);
 }
-
 .toast {
     background:#1f2937;
     border-left:6px solid #22c55e;
@@ -174,11 +183,9 @@ h1 {
     transform:translateY(20px);
     animation:toastIn .3s forwards;
 }
-
 @keyframes toastIn {
     to { opacity:1; transform:translateY(0); }
 }
-
 .toast.hide {
     opacity:0;
     transform:translateY(20px);
@@ -190,7 +197,9 @@ h1 {
 <body>
 
 <h1>Roblox Crosshair Manager</h1>
-<div class="credit">rip cursors.pro — made by mekazu</div>
+<div class="credit">
+  rip cursors.pro — made by <a href="https://www.roblox.com/users/924793440/profile" target="_blank" rel="noopener">mekazu</a>
+</div>
 
 <div class="tabs">
     <button class="tab active" data-tab="library">Library</button>
@@ -212,6 +221,10 @@ h1 {
         <div class="bg-thumb" style="background-image:url('backgrounds/gt2.PNG')" data-bg="gt2.PNG"></div>
         <div class="bg-thumb" style="background-image:url('backgrounds/ord1.PNG')" data-bg="ord1.PNG"></div>
         <div class="bg-thumb" style="background-image:url('backgrounds/ord2.PNG')" data-bg="ord2.PNG"></div>
+    </div>
+
+    <div class="preview-controls">
+        <button id="fullscreenBtn">⛶ Fullscreen Preview</button>
     </div>
 
     <div id="previewBox">
@@ -245,8 +258,9 @@ const crosshairs = [
 
 const grid = document.getElementById("grid");
 const previewBox = document.getElementById("previewBox");
+const fullscreenBtn = document.getElementById("fullscreenBtn");
 
-/* RENDER LIBRARY */
+/* LIBRARY */
 crosshairs.forEach(c => {
     const card = document.createElement("div");
     card.className = "card";
@@ -255,7 +269,7 @@ crosshairs.forEach(c => {
         <img src="images/${c.id}.png">
         <div class="card__content">
             <h3>${c.name}</h3>
-            <p>Roblox ID</p>
+			<p>Roblox ID: <strong>${c.id}</strong></p>
             <button class="copyBtn">📋 Copy ID</button>
         </div>
     `;
@@ -266,16 +280,27 @@ crosshairs.forEach(c => {
         showToast("Copied ID!");
     };
 
-    // 🔥 SET PREVIEW CURSOR
     card.onclick = () => {
-        previewBox.style.cursor = `url(images/${c.id}.png) 16 16, crosshair`;
-        showToast("Preview cursor set");
+        const img = new Image();
+        img.src = `images/${c.id}.png`;
+        img.onload = () => {
+            const x = Math.floor(img.width / 2);
+            const y = Math.floor(img.height / 2);
+            previewBox.onmouseenter = () => {
+                previewBox.style.cursor =
+                    `url(images/${c.id}.png) ${x} ${y}, crosshair`;
+            };
+            previewBox.onmouseleave = () => {
+                previewBox.style.cursor = "default";
+            };
+            showToast("Preview cursor set");
+        };
     };
 
     grid.appendChild(card);
 });
 
-/* BACKGROUND SWITCH */
+/* BACKGROUNDS */
 document.querySelectorAll(".bg-thumb").forEach(bg => {
     bg.onclick = () => {
         previewBox.style.backgroundImage =
@@ -288,10 +313,19 @@ document.querySelectorAll(".tab").forEach(tab => {
     tab.onclick = () => {
         document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
         tab.classList.add("active");
-
         document.querySelectorAll(".tabPage").forEach(p => p.style.display = "none");
         document.getElementById(tab.dataset.tab).style.display = "block";
     };
+});
+
+/* FULLSCREEN */
+fullscreenBtn.onclick = () => {
+    if (!document.fullscreenElement) previewBox.requestFullscreen();
+    else document.exitFullscreen();
+};
+document.addEventListener("fullscreenchange", () => {
+    fullscreenBtn.textContent =
+        document.fullscreenElement ? "⛶ Exit Fullscreen" : "⛶ Fullscreen Preview";
 });
 
 /* TOAST */
@@ -300,7 +334,6 @@ function showToast(msg) {
     toast.className = "toast";
     toast.textContent = msg;
     document.getElementById("toastBox").appendChild(toast);
-
     setTimeout(() => toast.classList.add("hide"), 2000);
     setTimeout(() => toast.remove(), 2600);
 }
@@ -308,4 +341,3 @@ function showToast(msg) {
 
 </body>
 </html>
-
