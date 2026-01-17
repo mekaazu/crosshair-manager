@@ -1,8 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <title>Roblox Crosshair Manager</title>
+
 <style>
+* { box-sizing:border-box; }
+
+body {
+    background:#0b0b0b;
+    color:white;
+    font-family:Segoe UI, Arial, sans-serif;
+    padding:20px;
+}
+
+/* TITLE */
+h1 {
+    margin-bottom:6px;
+    text-align:center;
+}
+
+/* CREDIT */
+.credit {
+    text-align:center;
+    margin-bottom:20px;
+    font-size:14px;
+    color:#9ca3af;
+    letter-spacing:.5px;
+}
+
+/* SEARCH */
+#search {
+    display:block;
+    margin:0 auto 24px;
+    padding:10px 14px;
+    width:260px;
+    border-radius:10px;
+    border:none;
+    outline:none;
+    font-size:14px;
+    background:#1f2937;
+    color:white;
+}
+
+/* GRID */
+#grid {
+    display:grid;
+    grid-template-columns:repeat(auto-fill, 200px);
+    gap:12px;
+    justify-content:center;
+}
+
+/* CARD */
+.card {
+    position:relative;
+    width:200px;
+    height:200px;
+    background:#1a1a1a;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    box-shadow:0 0 0 2px #ffffff30;
+    transition:transform .3s ease, box-shadow .3s ease;
+}
+
+.card:hover {
+    transform:scale(1.05);
+    box-shadow:0 10px 25px rgba(255,255,255,.15);
+}
+
+/* IMAGE */
+.card img {
+    width:120px;
+    height:120px;
+    image-rendering:pixelated;
+    transition:transform .5s ease, opacity .5s ease;
+}
+
+.card:hover img {
+    transform:scale(0);
+    opacity:0;
+}
+
+/* FLIP CONTENT */
+.card__content {
+    position:absolute;
+    inset:0;
+    padding:16px;
+    background:#f2f2f2;
+    color:#111;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    text-align:center;
+    transform:rotateX(-90deg);
+    transform-origin:bottom;
+    transition:transform .5s ease;
+}
+
+.card:hover .card__content {
+    transform:rotateX(0deg);
+}
+
+.card__title {
+    margin:0;
+    font-size:18px;
+    font-weight:700;
+}
+
+.card__description {
+    margin:6px 0 14px;
+    font-size:13px;
+    color:#555;
+}
+
+.copyBtn {
+    background:#2563eb;
+    border:none;
+    color:white;
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:14px;
+}
+
+/* TOAST */
+#toastBox {
+    position:fixed;
+    bottom:24px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:9999;
+}
+
 .toast {
     background:#1f2937;
     border-left:6px solid #22c55e;
@@ -12,115 +144,134 @@
     display:flex;
     align-items:center;
     gap:10px;
-    margin-bottom:10px;
-    animation: slideIn .25s ease;
+    margin-top:10px;
+    opacity:0;
+    transform:translateY(20px);
+    animation:toastIn .3s ease forwards;
 }
 
-@keyframes slideIn {
-    from { transform:translateX(40px); opacity:0; }
-    to   { transform:translateX(0); opacity:1; }
+@keyframes toastIn {
+    to { opacity:1; transform:translateY(0); }
 }
 
-body {
-    background:#0b0b0b;
-    color:white;
-    font-family:Segoe UI, Arial;
-    padding:20px;
+.toast.hide {
+    opacity:0;
+    transform:translateY(20px);
+    transition:opacity .4s ease, transform .4s ease;
 }
-
-h1 { margin-bottom:20px; }
-
-#toastBox {
-    position:fixed;
-    top:20px;
-    right:20px;
-    z-index:999;
-}
-
-#grid {
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
-    gap:28px;
-}
-
-.card {
-    background:#141414;
-    border-radius:18px;
-    padding:28px;
-    text-align:center;
-    box-shadow:0 0 18px rgba(0,0,0,.7);
-}
-
-.card img {
-    width:80px;
-    height:80px;
-    margin-bottom:12px;
-    image-rendering:pixelated;
-}
-
-.name {
-    font-size:16px;
-    margin-bottom:10px;
-}
-
-.copyBtn {
-    background:#2a78ff;
-    border:none;
-    color:white;
-    padding:8px 14px;
-    border-radius:8px;
-    cursor:pointer;
-}
-
-.copyBtn:hover { background:#3b88ff; }
 </style>
 </head>
+
 <body>
 
 <h1>Roblox Crosshair Manager</h1>
+<div class="credit">— made by mekazu</div>
 
-<div id="toastBox"></div>
+<input id="search" placeholder="Search crosshairs..." />
+
 <div id="grid"></div>
+<div id="toastBox"></div>
 
 <script>
 const crosshairs = [
-  { id:"12230015092", name:"Yellow Dot", file:"12230015092.png" },
-  { id:"6656897946", name:"Anime", file:"6656897946.png" },
+  { id:"7808856342", name:"Small White (0.75x)" },
+  { id:"5317446884", name:"Recon Dot (1.5x)" },
+  { id:"973818323", name:"Classic SMG White" },
+  { id:"7808857476", name:"Small Green" },
+  { id:"7808856849", name:"Small Red" },
+  { id:"6513760540", name:"Pink Dot" },
+  { id:"3045906973", name:"Purple Pixel" },
+  { id:"973821524", name:"Purple Double Circle" },
+  { id:"7962972891", name:"Large Green" },
+  { id:"5345033107", name:"Green Dot (1.5x)" },
+  { id:"5119932959", name:"Orange Dot" },
+  { id:"4882930044", name:"Green Cross" },
+  { id:"6162356229", name:"Blue Cross" },
+  { id:"5355743715", name:"Green Dot Hollow" },
+  { id:"4813359779", name:"Green Hollow Box [ST]" },
+  { id:"2897930467", name:"Lime Green Dot" },
+  { id:"5615369495", name:"Green SMG" },
+  { id:"7962980217", name:"Green Dot Gray Circle" },
+  { id:"5355158165", name:"Blue Diagonal Cross" },
+  { id:"5338736683", name:"Green Dot with Cross" },
+  { id:"4996338163", name:"Outlined Orange Dot" },
+  { id:"4977719314", name:"Teal Plus" },
+  { id:"4671612521", name:"Katiba" },
+  { id:"1177161234", name:"Cyan Diagonal Cross" },
+  { id:"1314267823", name:"Recon Dot" },
+  { id:"974334349", name:"Green Dot" },
+  { id:"6929587871", name:"Snow Core Small White Dot" },
+  { id:"1175800511", name:"Cyan Dot" },
+  { id:"4845399440", name:"Dark Blue Dot" },
+  { id:"2833910141", name:"Pink Dot" },
+  { id:"4867961490", name:"Gold Dot" },
+  { id:"4813642997", name:"Yellow Dot" },
+  { id:"4915772229", name:"Teal Dot" },
+  { id:"2666442734", name:"Red Glowing Dot" },
+  { id:"1068136986", name:"Small SMG" },
+  { id:"1177379923", name:"Red Dot w/ Red Circle" },
+  { id:"970416008", name:"RCL Default Armageddon" },
+  { id:"1178545824", name:"Red Dot w/ Diagonal Cross" },
+  { id:"973823018", name:"Red ST Cursor" },
+  { id:"973823951", name:"Green ST Cursor" },
+  { id:"1001678748", name:"Pink Diamond" },
+  { id:"4901195653", name:"Green Dot w/ Green Circle" },
+  { id:"974339313", name:"Brown ST w/ Blue Outline" },
+  { id:"304591126", name:"Red Dot w/ White Outline" },
+  { id:"6656897953", name:"Anime Girl" },
+  { id:"6342049525", name:"Shaltear" },
+  { id:"6342042394", name:"Aqua" },
+  { id:"6321798512", name:"Megumin" },
+  { id:"5154355692", name:"Astolfo" }
 ];
 
 const grid = document.getElementById("grid");
+const search = document.getElementById("search");
 
-crosshairs.forEach(c => {
-  const card = document.createElement("div");
-  card.className = "card";
-  card.innerHTML = `
-      <img src="images/${c.file}">
-      <div class="name">${c.name}</div>
-      <button class="copyBtn">📋 Copy ID</button>
-  `;
+function render() {
+  grid.innerHTML = "";
+  crosshairs.forEach(c => {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.search = (c.name + c.id).toLowerCase();
 
-  card.querySelector("button").onclick = () => {
-      navigator.clipboard.writeText(c.id);
-      showToast("Copied crosshair ID!");
-  };
-
-  grid.appendChild(card);
-});
-
-function showToast(message) {
-    const toast = document.createElement("div");
-    toast.className = "toast";
-    toast.innerHTML = `
-        <svg stroke="currentColor" viewBox="0 0 24 24" fill="none" width="20">
-            <path d="M13 16h-1v-4h1m0-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              stroke-width="2" stroke-linejoin="round" stroke-linecap="round"></path>
-        </svg>
-        <span>${message}</span>
+    card.innerHTML = `
+      <img src="images/${c.id}.png">
+      <div class="card__content">
+        <h3 class="card__title">${c.name}</h3>
+        <p class="card__description">Roblox Asset ID</p>
+        <button class="copyBtn">📋 Copy ID</button>
+      </div>
     `;
 
-    document.getElementById("toastBox").appendChild(toast);
-    setTimeout(() => toast.remove(), 2500);
+    card.querySelector(".copyBtn").onclick = () => {
+      navigator.clipboard.writeText(
+        `ImageLabel.Image = "rbxassetid://${c.id}"`
+      );
+      showToast("Copied Lua code!");
+    };
+
+    grid.appendChild(card);
+  });
 }
+
+search.addEventListener("input", e => {
+  const q = e.target.value.toLowerCase();
+  document.querySelectorAll(".card").forEach(card => {
+    card.style.display = card.dataset.search.includes(q) ? "flex" : "none";
+  });
+});
+
+function showToast(msg) {
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = msg;
+  document.getElementById("toastBox").appendChild(toast);
+  setTimeout(() => toast.classList.add("hide"), 2000);
+  setTimeout(() => toast.remove(), 2600);
+}
+
+render();
 </script>
 
 </body>
