@@ -53,21 +53,6 @@ h1 {
     text-decoration:underline;
 }
 
-/* VISITOR COUNTER (BOTTOM LEFT) */
-#visitorCount {
-    position:fixed;
-    bottom:16px;
-    left:16px;
-    font-size:14px;
-    color:#d1d5db;
-    background:rgba(0,0,0,0.55);
-    padding:6px 10px;
-    border-radius:10px;
-    font-weight:600;
-    z-index:9999;
-    backdrop-filter: blur(6px);
-}
-
 /* TABS */
 .tabs {
     display:flex;
@@ -245,8 +230,6 @@ h1 {
   </span>
 </div>
 
-<div id="visitorCount">👀 Visits</div>
-
 <div class="tabs">
     <button class="tab active" data-tab="library">Library</button>
     <button class="tab" data-tab="preview">Preview</button>
@@ -374,19 +357,6 @@ document.addEventListener("fullscreenchange", () => {
     fullscreenBtn.textContent =
         document.fullscreenElement ? "⛶ Exit Fullscreen" : "⛶ Fullscreen Preview";
 });
-
-/* VISITOR COUNTER (GLOBAL – WORKS ON GITHUB PAGES) */
-const visitorEl = document.getElementById("visitorCount");
-fetch("https://api.countapi.xyz/hit/mekazu-rblx-crosshairs/visits", { cache:"no-store" })
-  .then(res => res.json())
-  .then(data => {
-      if (data && typeof data.value === "number") {
-          visitorEl.textContent = `👀 ${data.value.toLocaleString()} visits`;
-      }
-  })
-  .catch(() => {
-      visitorEl.textContent = "👀 Visits";
-  });
 
 /* TOAST */
 function showToast(msg) {
