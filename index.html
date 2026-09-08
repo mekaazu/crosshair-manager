@@ -2,220 +2,311 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="A library of Roblox crosshair decal IDs with a live cursor preview.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%232563eb' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='2.5' fill='%2322c55e'/%3E%3C/svg%3E">
 <title>Roblox Crosshair Library</title>
 
 <style>
-* { box-sizing:border-box; }
+:root {
+    --bg:        #0b0b0b;
+    --surface:   #161616;
+    --surface-2: #1f2937;
+    --line:      #ffffff1f;
+    --text:      #ffffff;
+    --muted:     #9ca3af;
+    --accent:    #2563eb;
+    --ok:        #22c55e;
+    --radius:    14px;
+}
+
+* { box-sizing: border-box; }
 
 body {
-    background:#0b0b0b;
-    color:white;
-    font-family:Segoe UI, Arial, sans-serif;
-    padding:20px;
+    margin: 0;
+    padding: 20px 16px 60px;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
 }
 
-/* TITLE */
-h1 {
-    margin-bottom:6px;
-    text-align:center;
-}
+.wrap { max-width: 1200px; margin: 0 auto; }
 
-/* CREDIT */
+h1 { margin: 0 0 6px; text-align: center; font-size: clamp(22px, 4vw, 34px); }
+
+/* CREDIT ------------------------------------------------------- */
 .credit {
-    text-align:center;
-    margin-bottom:14px;
-    font-size:14px;
-    color:#9ca3af;
+    text-align: center;
+    margin-bottom: 18px;
+    font-size: 14px;
+    color: var(--muted);
 }
-.credit a {
-    color:#9ca3af;
-    text-decoration:none;
-    font-weight:600;
-}
-.credit a:hover {
-    color:white;
-    text-decoration:underline;
-}
+.credit a { color: var(--muted); text-decoration: none; font-weight: 600; }
+.credit a:hover { color: var(--text); text-decoration: underline; }
 
-/* SUBMIT CTA */
-.submit-text {
-    display:block;
-    margin-top:6px;
-    font-size:15px;
-    color:#d1d5db;
-}
-.submit-text a {
-    color:#60a5fa;
-    font-weight:600;
-    text-decoration:none;
-}
-.submit-text a:hover {
-    text-decoration:underline;
-}
+.submit-text { display: block; margin-top: 6px; font-size: 15px; color: #d1d5db; }
+.submit-text a { color: #60a5fa; font-weight: 600; text-decoration: none; }
+.submit-text a:hover { text-decoration: underline; }
 
-/* TABS */
-.tabs {
-    display:flex;
-    justify-content:center;
-    gap:10px;
-    margin-bottom:20px;
-}
+/* TABS --------------------------------------------------------- */
+.tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 18px; }
 .tab {
-    background:#1f2937;
-    color:white;
-    border:none;
-    padding:8px 16px;
-    border-radius:10px;
-    cursor:pointer;
+    background: var(--surface-2);
+    color: var(--text);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 10px;
+    font: inherit;
+    cursor: pointer;
 }
-.tab.active {
-    background:#2563eb;
+.tab.active { background: var(--accent); }
+
+/* TOOLBAR ------------------------------------------------------ */
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
 }
 
-/* GRID */
+#search {
+    flex: 1 1 260px;
+    max-width: 360px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    color: var(--text);
+    font: inherit;
+    padding: 9px 12px;
+}
+#search::placeholder { color: #6b7280; }
+#search:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+.filters { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+.chip {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: #d1d5db;
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+    padding: 6px 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.chip:hover { border-color: var(--accent); }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.chip .swatch {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px #ffffff59;
+}
+
+#count { color: var(--muted); font-size: 13px; text-align: center; margin-bottom: 14px; }
+
+/* GRID --------------------------------------------------------- */
 #grid {
-    display:grid;
-    grid-template-columns:repeat(auto-fill, 200px);
-    gap:12px;
-    justify-content:center;
+    display: grid;
+    /* auto-fill sizes tracks by the max, so a fixed max would leave phones
+       with a single column. 1fr lets the columns share whatever is left. */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
 }
 
-/* CARD */
+/* CARD --------------------------------------------------------- */
 .card {
-    position:relative;
-    width:200px;
-    height:200px;
-    background:#1a1a1a;
-    border-radius:14px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    overflow:hidden;
-    box-shadow:0 0 0 2px #ffffff30;
-    transition:.3s;
-    cursor:pointer;
+    position: relative;
+    aspect-ratio: 1;
+    background: var(--surface);
+    border-radius: var(--radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-shadow: 0 0 0 2px var(--line);
+    transition: transform .25s, box-shadow .25s;
+    cursor: pointer;
+    /* Skip layout/paint for cards scrolled off screen — keeps the page
+       snappy as the library grows. */
+    content-visibility: auto;
+    contain-intrinsic-size: 200px;
 }
-.card:hover { transform:scale(1.05); }
+.card:hover { transform: scale(1.05); }
+.card:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--accent); }
+.card.is-selected { box-shadow: 0 0 0 3px var(--ok); }
+.card[hidden] { display: none; }
 
 .card img {
-    width:120px;
-    height:120px;
-    image-rendering:pixelated;
+    width: 120px;
+    height: 120px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    transform-origin: center;
+    /* Zoomed art can be several times the card; the card clips it visually,
+       and this keeps it out of hit-testing. The card handles the click. */
+    pointer-events: none;
 }
+.card img.missing { opacity: .25; }
 
 .card__content {
-    position:absolute;
-    inset:0;
-    background:#f2f2f2;
-    color:#111;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    text-align:center;
-    transform:rotateX(-90deg);
-    transform-origin:bottom;
-    transition:.4s;
+    position: absolute;
+    inset: 0;
+    padding: 10px;
+    background: #f2f2f2;
+    color: #111;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    transform: rotateX(-90deg);
+    transform-origin: bottom;
+    transition: transform .35s;
 }
-.card:hover .card__content {
-    transform:rotateX(0);
-}
+.card:hover .card__content,
+.card:focus-visible .card__content,
+.card:focus-within .card__content { transform: rotateX(0); }
+
+.card__content h3 { margin: 0; font-size: 15px; line-height: 1.25; }
+.card__content p  { margin: 0; font-size: 12px; word-break: break-all; }
 
 .copyBtn {
-    background:#2563eb;
-    border:none;
-    color:white;
-    padding:8px 12px;
-    border-radius:8px;
-    cursor:pointer;
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+.copyBtn:hover { filter: brightness(1.12); }
+
+/* Touch devices have no hover, so show the details permanently. */
+@media (hover: none) {
+    .card__content {
+        transform: none;
+        inset: auto 0 0 0;
+        background: #000000cc;
+        color: #fff;
+        padding: 8px;
+        gap: 6px;
+    }
+    .card:hover { transform: none; }
 }
 
-/* PREVIEW */
-.preview-controls {
-    text-align:center;
-    margin-bottom:12px;
+@media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation-duration: .01ms !important; }
 }
+
+#empty { display: none; text-align: center; color: var(--muted); padding: 40px 0; }
+
+@media (max-width: 420px) {
+    body { padding: 16px 10px 40px; }
+    #grid {
+        gap: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+}
+
+/* PREVIEW ------------------------------------------------------ */
+.bg-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.bg-thumb {
+    width: 120px;
+    height: 70px;
+    padding: 0;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--surface);
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+.bg-thumb:hover { border-color: var(--accent); }
+.bg-thumb[aria-pressed="true"] { border-color: var(--ok); }
+
+.preview-controls {
+    text-align: center;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: center;
+}
+#previewName { color: var(--muted); font-size: 14px; }
 
 #fullscreenBtn {
-    background:#2563eb;
-    border:none;
-    color:white;
-    padding:8px 14px;
-    border-radius:10px;
-    cursor:pointer;
+    background: var(--accent);
+    border: none;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 10px;
+    font: inherit;
+    cursor: pointer;
 }
 
 #previewBox {
-    width:900px;
-    height:500px;
-    margin:0 auto;
-    border-radius:16px;
-    background:#111;
-    background-size:cover;
-    background-position:center;
-    position:relative;
-    overflow:hidden;
+    width: 100%;
+    max-width: 900px;
+    aspect-ratio: 9 / 5;
+    margin: 0 auto;
+    border-radius: 16px;
+    background: #111 center / cover no-repeat;
+    position: relative;
+    overflow: hidden;
 }
+#previewBox:fullscreen { border-radius: 0; max-width: none; aspect-ratio: auto; }
 
 .preview-note {
-    position:absolute;
-    inset:0;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    color:#888;
-    pointer-events:none;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    pointer-events: none;
+    text-align: center;
+    padding: 12px;
 }
 
-/* BACKGROUNDS */
-.bg-grid {
-    display:flex;
-    justify-content:center;
-    gap:12px;
-    margin-bottom:16px;
-}
-.bg-thumb {
-    width:120px;
-    height:70px;
-    border-radius:8px;
-    background-size:cover;
-    background-position:center;
-    cursor:pointer;
-    border:2px solid transparent;
-}
-.bg-thumb:hover {
-    border-color:#2563eb;
-}
-
-/* TOAST */
+/* TOAST -------------------------------------------------------- */
 #toastBox {
-    position:fixed;
-    bottom:24px;
-    left:50%;
-    transform:translateX(-50%);
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    pointer-events: none;
 }
-
 .toast {
-    background:#1f2937;
-    border-left:6px solid #22c55e;
-    padding:12px 16px;
-    border-radius:10px;
-    margin-top:10px;
-    opacity:0;
-    transform:translateY(20px);
-    animation:toastIn .3s forwards;
+    background: var(--surface-2);
+    border-left: 6px solid var(--ok);
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-top: 10px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: toastIn .3s forwards;
 }
-@keyframes toastIn {
-    to { opacity:1; transform:translateY(0); }
-}
-.toast.hide {
-    opacity:0;
-    transform:translateY(20px);
-    transition:.4s;
-}
+@keyframes toastIn { to { opacity: 1; transform: translateY(0); } }
+.toast.hide { opacity: 0; transform: translateY(20px); transition: .4s; }
 </style>
 </head>
 
 <body>
+<div class="wrap">
 
 <h1>Roblox Crosshair Library</h1>
 
@@ -223,157 +314,442 @@ h1 {
   rip cursors.pro — made by
   <a href="https://www.roblox.com/users/924793440/profile" target="_blank" rel="noopener">mekazu</a>
   <span class="submit-text">
-    Crosshair isn’t here?
-    <a href="https://forms.gle/EHda1fDvCt9jwow67" target="_blank" rel="noopener">
-      Submit a form
-    </a>
+    Crosshair isn't here?
+    <a href="https://forms.gle/EHda1fDvCt9jwow67" target="_blank" rel="noopener">Submit a form</a>
   </span>
 </div>
 
 <div class="tabs">
-    <button class="tab active" data-tab="library">Library</button>
-    <button class="tab" data-tab="preview">Preview</button>
+    <button class="tab active" data-tab="library" aria-pressed="true">Library</button>
+    <button class="tab" data-tab="preview" aria-pressed="false">Preview</button>
 </div>
 
 <!-- LIBRARY -->
 <div id="library" class="tabPage">
+    <div class="toolbar">
+        <input id="search" type="search" placeholder="Search name, ID or colour…" autocomplete="off" aria-label="Search crosshairs">
+        <div class="filters" id="filters" role="group" aria-label="Filter by colour"></div>
+    </div>
+    <p id="count" role="status"></p>
     <div id="grid"></div>
+    <p id="empty">No crosshairs match that search.</p>
 </div>
 
 <!-- PREVIEW -->
-<div id="preview" class="tabPage" style="display:none;">
-    <div class="bg-grid">
-        <div class="bg-thumb" style="background-image:url('backgrounds/wh1.PNG')" data-bg="wh1.PNG"></div>
-        <div class="bg-thumb" style="background-image:url('backgrounds/wh2.PNG')" data-bg="wh2.PNG"></div>
-        <div class="bg-thumb" style="background-image:url('backgrounds/wh3.PNG')" data-bg="wh3.PNG"></div>
-        <div class="bg-thumb" style="background-image:url('backgrounds/gt1.PNG')" data-bg="gt1.PNG"></div>
-        <div class="bg-thumb" style="background-image:url('backgrounds/gt2.PNG')" data-bg="gt2.PNG"></div>
-        <div class="bg-thumb" style="background-image:url('backgrounds/ord1.PNG')" data-bg="ord1.PNG"></div>
-        <div class="bg-thumb" style="background-image:url('backgrounds/ord2.PNG')" data-bg="ord2.PNG"></div>
-    </div>
+<div id="preview" class="tabPage" hidden>
+    <div class="bg-grid" id="bgGrid"></div>
 
     <div class="preview-controls">
+        <span id="previewName">No crosshair selected</span>
         <button id="fullscreenBtn">⛶ Fullscreen Preview</button>
     </div>
 
     <div id="previewBox">
-        <div class="preview-note">Move your mouse here</div>
+        <div class="preview-note" id="previewNote">Pick a crosshair in the Library, then move your mouse here</div>
     </div>
 </div>
 
 <div id="toastBox"></div>
 
+</div><!-- /wrap -->
+
+<script src="crosshairs.js"></script>
 <script>
-const crosshairs = [
-    { id:"7808856331", name:"Small White (0.75x)" },
-    { id:"973818318", name:"Classic SMG White" },
-    { id:"12230011198", name:"Perfect White Dot" },
-    { id:"7808857452", name:"Small Green" },
-    { id:"5345033072", name:"Green Dot (1.5x)" },
-    { id:"12045455478", name:"CommandoJesus2" },
-    { id:"974334349", name:"Green Dot" },
-    { id:"4882930015", name:"Green Cross" },
-    { id:"5355743699", name:"Green Dot Hollow" },
-    { id:"4813359774", name:"Green Hollow Box [ST]" },
-    { id:"2897930456", name:"Lime Green Dot" },
-    { id:"1175800511", name:"Cyan Dot" },
-    { id:"138657308513869", name:"Cyan Dot" },
-    { id:"4845399440", name:"Dark Blue Dot" },
-    { id:"3045906966", name:"Purple Pixel" },
-    { id:"2833910141", name:"Pink Dot" },
-    { id:"4867961490", name:"Gold Dot" },
-    { id:"4813642997", name:"Yellow Dot" },
-    { id:"12230015092", name:"Small Yellow Dot" },
-    { id:"7808856842", name:"Small Red" },
-    { id:"2666442734", name:"Red Glowing Dot" },
-    { id:"76178984348183", name:"Red Dot" },
-    { id:"973823018", name:"Red ST Cursor" },
-    { id:"98289740245491", name:"Pink Dot" },
-    { id:"970416008", name:"RCL" },
-    { id:"10717562036", name:"Red RCL" },
-    { id:"71554656973830", name:"Black Dot" },
-    { id:"974339313", name:"ST" },
-    { id:"95263908240239", name:"Black Crosshair" }
-    
-];
+"use strict";
 
-const grid = document.getElementById("grid");
-const previewBox = document.getElementById("previewBox");
-const fullscreenBtn = document.getElementById("fullscreenBtn");
+/* Crosshair data lives in crosshairs.js — never edit this file to add one. */
 
-/* LIBRARY */
-crosshairs.forEach(c => {
+const COLORS = {
+    white:  "#f5f5f5", black: "#111111", red:    "#ef4444", orange: "#f97316",
+    yellow: "#eab308", green: "#22c55e", cyan:   "#06b6d4", blue:   "#3b82f6",
+    purple: "#a855f7", pink:  "#ec4899"
+};
+
+const $ = id => document.getElementById(id);
+const grid        = $("grid");
+const emptyMsg    = $("empty");
+const countEl     = $("count");
+const searchInput = $("search");
+const filtersEl   = $("filters");
+const bgGrid      = $("bgGrid");
+const previewBox  = $("previewBox");
+const previewNote = $("previewNote");
+const previewName = $("previewName");
+const toastBox    = $("toastBox");
+
+const escapeHtml = s => String(s).replace(/[&<>"']/g, c =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+/* Normalise the data once so the rest of the code can stay simple and the
+   data file can stay forgiving (name and colour are optional). */
+const items = (typeof CROSSHAIRS !== "undefined" ? CROSSHAIRS : []).map(c => {
+    const name  = c.name || c.id;
+    const color = (c.color || "").toLowerCase();
+    return {
+        id: c.id,
+        name,
+        color,
+        src: `images/${c.id}.png`,
+        // Pre-computed lowercase haystack: searching is then one indexOf per
+        // card instead of rebuilding strings on every keystroke.
+        haystack: `${name} ${c.id} ${color} ${c.tags || ""}`.toLowerCase(),
+        el: null
+    };
+});
+
+/* ---------- LIBRARY ------------------------------------------------ */
+
+// Build every card in a fragment, then attach once: one reflow, not N.
+const frag = document.createDocumentFragment();
+for (const item of items) {
     const card = document.createElement("div");
     card.className = "card";
-    card.innerHTML = `
-        <img src="images/${c.id}.png">
-        <div class="card__content">
-            <h3>${c.name}</h3>
-            <p>Roblox ID: <strong>${c.id}</strong></p>
-            <button class="copyBtn">📋 Copy ID</button>
-        </div>
-    `;
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", `${item.name} — Roblox ID ${item.id}`);
+    card.dataset.id = item.id;
+    card.innerHTML =
+        `<img src="${escapeHtml(item.src)}" alt="" width="120" height="120" loading="lazy" decoding="async">` +
+        `<div class="card__content">` +
+            `<h3>${escapeHtml(item.name)}</h3>` +
+            `<p>ID: <strong>${escapeHtml(item.id)}</strong></p>` +
+            `<button class="copyBtn" type="button">📋 Copy ID</button>` +
+        `</div>`;
+    item.el = card;
+    frag.appendChild(card);
+}
+grid.appendChild(frag);
 
-    card.querySelector(".copyBtn").onclick = e => {
-        e.stopPropagation();
-        navigator.clipboard.writeText(c.id);
-        showToast("Copied ID!");
+// One image error handler for the whole grid instead of one per card.
+// (error doesn't bubble, but it does capture.)
+grid.addEventListener("error", e => {
+    if (e.target.tagName === "IMG") e.target.classList.add("missing");
+}, true);
+
+/* ---------- CARD AUTO-ZOOM -----------------------------------------
+   Most Roblox decals are a handful of pixels of art floating in a mostly
+   transparent 80-256px canvas, so at card size they all look like the same
+   speck. Measure the artwork's bounding box once per image and scale the
+   card preview to fit it, so crosshairs are actually distinguishable.
+
+   Measured lazily (only for images that scroll into view) and cached in
+   localStorage, so it costs nothing on repeat visits and nothing extra when
+   you upload a new crosshair — no per-image config to maintain. */
+
+const ZOOM_KEY = "crosshair-zoom-v1";
+const TARGET_FILL = 0.62;   // artwork should cover this much of the card image
+const MAX_ZOOM = 10;
+
+let zoomCache = {};
+try { zoomCache = JSON.parse(localStorage.getItem(ZOOM_KEY) || "{}"); } catch (err) { /* ignore */ }
+
+let zoomSaveTimer;
+function saveZoomCache() {
+    clearTimeout(zoomSaveTimer);
+    zoomSaveTimer = setTimeout(() => {
+        try { localStorage.setItem(ZOOM_KEY, JSON.stringify(zoomCache)); } catch (err) { /* ignore */ }
+    }, 500);
+}
+
+// Alpha bounding box of an image, as fractions of its natural size.
+function measureArt(img) {
+    const w = img.naturalWidth, h = img.naturalHeight;
+    if (!w || !h) return null;
+    const canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0);
+
+    let data;
+    try { data = ctx.getImageData(0, 0, w, h).data; }
+    catch (err) { return null; }   // tainted canvas (file://) — leave as-is
+
+    let minX = w, minY = h, maxX = -1, maxY = -1;
+    for (let y = 0; y < h; y++) {
+        const row = y * w * 4;
+        for (let x = 0; x < w; x++) {
+            if (data[row + x * 4 + 3] > 16) {
+                if (x < minX) minX = x;
+                if (x > maxX) maxX = x;
+                if (y < minY) minY = y;
+                if (y > maxY) maxY = y;
+            }
+        }
+    }
+    if (maxX < 0) return null;      // fully transparent
+
+    const bw = (maxX - minX + 1) / w;
+    const bh = (maxY - minY + 1) / h;
+    return {
+        // scale needed to bring the artwork up to TARGET_FILL of the card
+        s: Math.min(MAX_ZOOM, Math.max(1, TARGET_FILL / Math.max(bw, bh))),
+        // artwork centre offset from canvas centre, as a fraction
+        dx: 0.5 - (minX + maxX + 1) / 2 / w,
+        dy: 0.5 - (minY + maxY + 1) / 2 / h
     };
+}
 
-    card.onclick = () => {
-        const img = new Image();
-        img.src = `images/${c.id}.png`;
-        img.onload = () => {
-            const x = img.width / 2;
-            const y = img.height / 2;
-            previewBox.onmouseenter = () => {
-                previewBox.style.cursor =
-                    `url(images/${c.id}.png) ${x} ${y}, crosshair`;
-            };
-            previewBox.onmouseleave = () => {
-                previewBox.style.cursor = "default";
-            };
-            showToast("Preview cursor set");
-        };
-    };
+function applyZoom(img, z) {
+    if (!z || z.s <= 1.02) return;
+    const box = img.width || 120;
+    // CSS applies transforms right to left, so translate happens in the
+    // already-scaled space — exactly the shift the zoom needs.
+    img.style.transform =
+        `scale(${z.s.toFixed(3)}) translate(${(z.dx * box).toFixed(2)}px, ${(z.dy * box).toFixed(2)}px)`;
+}
 
-    grid.appendChild(card);
+function zoomImage(img) {
+    const id = img.closest(".card").dataset.id;
+    if (zoomCache[id]) { applyZoom(img, zoomCache[id]); return; }
+    const z = measureArt(img);
+    if (!z) return;
+    zoomCache[id] = z;
+    applyZoom(img, z);
+    saveZoomCache();
+}
+
+// `load` doesn't bubble either, so listen in the capture phase — one listener
+// for every card instead of one per image.
+grid.addEventListener("load", e => {
+    if (e.target.tagName === "IMG") zoomImage(e.target);
+}, true);
+
+// Images already cached by the browser may have finished before this ran.
+for (const item of items) {
+    const img = item.el.querySelector("img");
+    if (img.complete && img.naturalWidth) zoomImage(img);
+}
+
+/* Colour filter chips, built from whatever colours the data actually uses. */
+let activeColor = "all";
+const usedColors = [...new Set(items.map(i => i.color).filter(Boolean))]
+    .sort((a, b) => Object.keys(COLORS).indexOf(a) - Object.keys(COLORS).indexOf(b));
+
+const chipFrag = document.createDocumentFragment();
+for (const color of ["all", ...usedColors]) {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "chip";
+    chip.dataset.color = color;
+    chip.setAttribute("aria-pressed", String(color === "all"));
+    chip.innerHTML = color === "all"
+        ? "All"
+        : `<span class="swatch" style="background:${COLORS[color] || "#888"}"></span>` +
+          color[0].toUpperCase() + color.slice(1);
+    chipFrag.appendChild(chip);
+}
+filtersEl.appendChild(chipFrag);
+
+let query = "";
+
+function applyFilter() {
+    let shown = 0;
+    for (const item of items) {
+        const visible = (activeColor === "all" || item.color === activeColor) &&
+                        (query === "" || item.haystack.includes(query));
+        // Only touch the DOM when the state actually changes.
+        if (item.el.hidden === visible) item.el.hidden = !visible;
+        if (visible) shown++;
+    }
+    emptyMsg.style.display = shown ? "none" : "block";
+    countEl.textContent = shown === items.length
+        ? `${items.length} crosshairs`
+        : `${shown} of ${items.length} crosshairs`;
+}
+
+// Debounce so a fast typist doesn't trigger a filter pass per keypress.
+let searchTimer;
+searchInput.addEventListener("input", () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+        query = searchInput.value.trim().toLowerCase();
+        applyFilter();
+    }, 120);
 });
 
-/* BACKGROUNDS */
-document.querySelectorAll(".bg-thumb").forEach(bg => {
-    bg.onclick = () => {
-        previewBox.style.backgroundImage =
-            `url('backgrounds/${bg.dataset.bg}')`;
-    };
+filtersEl.addEventListener("click", e => {
+    const chip = e.target.closest(".chip");
+    if (!chip) return;
+    activeColor = chip.dataset.color;
+    for (const c of filtersEl.children) c.setAttribute("aria-pressed", String(c === chip));
+    applyFilter();
 });
 
-/* TABS */
-document.querySelectorAll(".tab").forEach(tab => {
-    tab.onclick = () => {
-        document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-        tab.classList.add("active");
-        document.querySelectorAll(".tabPage").forEach(p => p.style.display = "none");
-        document.getElementById(tab.dataset.tab).style.display = "block";
+applyFilter();
+
+/* ---------- SELECTION / CURSOR ------------------------------------- */
+
+// Browsers cap CSS cursors at 128px and silently ignore anything bigger, so
+// oversized decals get downscaled once (nearest-neighbour, to keep them crisp)
+// and the result is cached — no work on repeat selections.
+const MAX_CURSOR = 128;
+const cursorCache = new Map();
+let selectedCard = null;
+
+function cursorFor(item, img) {
+    if (cursorCache.has(item.id)) return cursorCache.get(item.id);
+
+    const w = img.naturalWidth  || 64;
+    const h = img.naturalHeight || 64;
+    let css;
+
+    if (w <= MAX_CURSOR && h <= MAX_CURSOR) {
+        css = `url("${item.src}") ${Math.round(w / 2)} ${Math.round(h / 2)}, crosshair`;
+    } else {
+        try {
+            const scale  = MAX_CURSOR / Math.max(w, h);
+            const canvas = document.createElement("canvas");
+            canvas.width  = Math.max(1, Math.round(w * scale));
+            canvas.height = Math.max(1, Math.round(h * scale));
+            const ctx = canvas.getContext("2d");
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            css = `url("${canvas.toDataURL("image/png")}") ` +
+                  `${Math.round(canvas.width / 2)} ${Math.round(canvas.height / 2)}, crosshair`;
+        } catch (err) {
+            // Canvas is tainted (opening the page from file:// does this).
+            // Fall back to the plain URL rather than losing the preview.
+            css = `url("${item.src}") ${Math.round(w / 2)} ${Math.round(h / 2)}, crosshair`;
+        }
+    }
+
+    cursorCache.set(item.id, css);
+    return css;
+}
+
+function selectCrosshair(item, img) {
+    const apply = () => {
+        previewBox.style.cursor = cursorFor(item, img);
+        previewNote.textContent = "Move your mouse here";
+        previewName.textContent = `Previewing: ${item.name}`;
+        if (selectedCard) selectedCard.classList.remove("is-selected");
+        selectedCard = item.el;
+        selectedCard.classList.add("is-selected");
+        showToast(`Preview set: ${item.name}`);
     };
+    // The card's own <img> is usually already decoded, so there is no second
+    // network request and no `new Image()` per click.
+    if (img.complete && img.naturalWidth) apply();
+    else img.addEventListener("load", apply, { once: true });
+}
+
+const byId = new Map(items.map(i => [i.id, i]));
+
+// One delegated listener for the whole grid instead of two closures per card.
+grid.addEventListener("click", e => {
+    const card = e.target.closest(".card");
+    if (!card) return;
+    const item = byId.get(card.dataset.id);
+    if (!item) return;
+
+    if (e.target.closest(".copyBtn")) {
+        copyId(item.id);
+        return;
+    }
+    selectCrosshair(item, card.querySelector("img"));
 });
 
-/* FULLSCREEN */
-fullscreenBtn.onclick = () => {
-    if (!document.fullscreenElement) previewBox.requestFullscreen();
+grid.addEventListener("keydown", e => {
+    if (e.key !== "Enter" && e.key !== " ") return;
+    const card = e.target.closest(".card");
+    if (!card || e.target !== card) return;
+    e.preventDefault();
+    const item = byId.get(card.dataset.id);
+    if (item) selectCrosshair(item, card.querySelector("img"));
+});
+
+function copyId(id) {
+    const done = () => showToast("Copied ID!");
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(id).then(done, () => fallbackCopy(id, done));
+    } else {
+        fallbackCopy(id, done);
+    }
+}
+
+function fallbackCopy(text, done) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.cssText = "position:fixed;opacity:0";
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); done(); }
+    catch (err) { showToast("Copy failed — ID is " + text); }
+    ta.remove();
+}
+
+/* ---------- BACKGROUNDS -------------------------------------------- */
+
+const backgrounds = typeof BACKGROUNDS !== "undefined" ? BACKGROUNDS : [];
+const bgFrag = document.createDocumentFragment();
+
+for (const bg of backgrounds) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "bg-thumb";
+    btn.dataset.bg = bg.file;
+    btn.title = bg.name || bg.file;
+    btn.setAttribute("aria-label", `Background: ${bg.name || bg.file}`);
+    btn.setAttribute("aria-pressed", "false");
+    // Thumbnails are a fraction of the full screenshots; the full image is
+    // only fetched once a background is actually chosen. (Missing thumbnails
+    // are reported by tools/check_library.py — don't list a second layer here
+    // as a fallback, it would download every full screenshot on page load.)
+    btn.style.backgroundImage = `url("backgrounds/thumbs/${bg.file}")`;
+    bgFrag.appendChild(btn);
+}
+bgGrid.appendChild(bgFrag);
+
+function setBackground(file) {
+    previewBox.style.backgroundImage = `url("backgrounds/${file}")`;
+    for (const b of bgGrid.children) b.setAttribute("aria-pressed", String(b.dataset.bg === file));
+    try { localStorage.setItem("crosshair-bg", file); } catch (err) { /* private mode */ }
+}
+
+bgGrid.addEventListener("click", e => {
+    const btn = e.target.closest(".bg-thumb");
+    if (btn) setBackground(btn.dataset.bg);
+});
+
+// Restore the last background, defaulting to the first one in the list.
+let savedBg = null;
+try { savedBg = localStorage.getItem("crosshair-bg"); } catch (err) { /* private mode */ }
+const initialBg = backgrounds.find(b => b.file === savedBg) || backgrounds[0];
+if (initialBg) setBackground(initialBg.file);
+
+/* ---------- TABS ---------------------------------------------------- */
+
+const tabs = document.querySelectorAll(".tab");
+document.querySelector(".tabs").addEventListener("click", e => {
+    const tab = e.target.closest(".tab");
+    if (!tab) return;
+    for (const t of tabs) {
+        const on = t === tab;
+        t.classList.toggle("active", on);
+        t.setAttribute("aria-pressed", String(on));
+        document.getElementById(t.dataset.tab).hidden = !on;
+    }
+});
+
+/* ---------- FULLSCREEN ---------------------------------------------- */
+
+const fullscreenBtn = $("fullscreenBtn");
+fullscreenBtn.addEventListener("click", () => {
+    if (!document.fullscreenElement) previewBox.requestFullscreen().catch(() => showToast("Fullscreen blocked"));
     else document.exitFullscreen();
-};
+});
 document.addEventListener("fullscreenchange", () => {
-    fullscreenBtn.textContent =
-        document.fullscreenElement ? "⛶ Exit Fullscreen" : "⛶ Fullscreen Preview";
+    fullscreenBtn.textContent = document.fullscreenElement ? "⛶ Exit Fullscreen" : "⛶ Fullscreen Preview";
 });
 
-/* TOAST */
+/* ---------- TOAST ---------------------------------------------------- */
+
 function showToast(msg) {
     const toast = document.createElement("div");
     toast.className = "toast";
     toast.textContent = msg;
-    document.getElementById("toastBox").appendChild(toast);
+    toastBox.appendChild(toast);
     setTimeout(() => toast.classList.add("hide"), 2000);
     setTimeout(() => toast.remove(), 2600);
 }
